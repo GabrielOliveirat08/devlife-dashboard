@@ -22,8 +22,6 @@ function App() {
     return salvas ? JSON.parse(salvas) : TAREFAS_INICIAIS;
   });
 
-  const [anuncio, setAnuncio] = useState("");
-
   const [filtro, setFiltro] = useState("todas");
 
   // EFEITO COLATERAL: sincronizar o estado com o localStorage.
@@ -40,25 +38,16 @@ function App() {
       ...atual,
       { ...novaTarefa, id: Date.now(), concluida: false },
     ]);
-
-    setAnuncio(`Tarefa "${novaTarefa.titulo}" adicionada.`)
   }
 
   function alternarConcluida(id) {
-    const tarefa = tarefas.find((t) => t.id === id);
-    const vaiConcluir = !tarefa.concluida;
-    const status = vaiConcluir ? "concluida" : "pendente";
     setTarefas((atual) =>
       atual.map((t) => (t.id === id ? { ...t, concluida: !t.concluida } : t))
     );
-
-    setAnuncio(`Tarefa "${tarefa.titulo}" marcada como ${status}.`)
   }
 
   function removerTarefa(id) {
-    const tarefa = tarefas.find((t) => t.id === id);
     setTarefas((atual) => atual.filter((t) => t.id !== id));
-    setAnuncio(`Tarefa "${tarefa.titulo}" removida.`);
   }
 
   const tarefasFiltradas = tarefas.filter((t) => {
@@ -69,19 +58,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <a 
-        href="#conteudo"
-        className={`sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-white
-          focus-text-slate-900 focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg`}
-        >
-        Pular para o conteúdo 
-      </a>
-
       <Header />
-
-      <div aria-live="polite" role="status" className="sr-only" >
-          {anuncio}
-      </div>
 
       <main className="max-w-4xl mx-auto px-6 py-10">
         <TaskForm onAdicionar={adicionarTarefa} />
